@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %} <!-- loading widget tweaks -->
+
+{% block title %}{{ home.username }}'s home{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <!-- User Profile Information -->
+        <div class="container mt-3">
+            <div class="row align-items-center">
+                <!-- User Image -->
+                <div class="col-auto">
+                    <img src="{{ home.photo.url }}" class="rounded-circle" alt="{{ home.username }}" style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
+                <!-- User Details and Update Button -->
+                <div class="col">
+                    <p><strong>Full Name:</strong> {{ home.full_name }}</p>
+                    <p><strong>Username:</strong> {{ home.username }}</p>
+                    <p><strong>Role:</strong> {{ home.get_role_display }}</p>
+                    <p><strong>Email:</strong> {{ home.email }}</p>
+                </div>
+                <div class="col-auto">
+                    <!-- Update Profile Button -->
+                    {% if update_profile_form %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Update Profile</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if update_profile_form %}
+        <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateProfileModalLabel">Update Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            {% csrf_token %}
+                            {% for field in update_profile_form %}
+                                <div class="mb-3">
+                                    {{ field.label_tag }}
+                                    {% render_field field class="form-control" %}
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback" style="display: block;">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="update_profile">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Courses Section -->
+        <h3 class="mt-2 mb-2">{{ perms.eLearningApp.can_create_course|yesno:"Created,Enrolled in" }} Courses</h3>
+        <div class="list-group mt-1">
+            {% for course in courses %}
+                <a href="{% url 'course_detail' course.id %}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{ course.title }}</h5>
+                    <p>{{ course.description }}</p>
+                </a>
+            {% empty %}
+                <p>No courses found.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Status Updates Section -->
+        <h3 class="mt-2 mb-2">Latest Status Updates</h3>
+        {% for status in status_updates %}
+            <div class="p-2 border rounded d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ status.user.username }}</strong>: {{ status.text }}
+                    <small class="text-muted">Posted on {{ status.created_at|date:"N j, Y, P" }}</small>
+                </div>
+                {% if request.user == status.user %}
+                    <form action="{% url 'delete_status' status.id %}" method="post" style="margin-bottom: 0;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No status updates.</p>
+        {% endfor %}
+
+        <!-- Status Form if user is the user of the page -->
+        {% if status_form %}
+            <div class="mt-2">
+                <h4>Leave a Status Update</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in status_form %}
+                        <div class="mb-1">
+                            {% render_field field class="form-control" placeholder=field.label %}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary" name="leave_status">Post</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if update_profile_form.errors %}
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var updateProfileModal = new bootstrap.Modal(document.getElementById('updateProfileModal'));
+            updateProfileModal.show();
+        });
+    </script>
+    {% endif %}
+
+{% endblock %}

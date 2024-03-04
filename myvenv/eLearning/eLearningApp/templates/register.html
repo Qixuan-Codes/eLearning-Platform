@@ -1,0 +1,83 @@
+{% load bootstrap5 %} <!-- loading bootstrap5 -->
+{% bootstrap_css %} <!-- loading bootstrap css -->
+{% bootstrap_javascript %} <!-- loading bootstrap javascript -->
+{% load widget_tweaks %} <!-- loading widget tweaks for the form -->
+{% load static %} <!-- loading static -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  {% bootstrap_css %}
+</head>
+
+<body>
+  <section class="h-100 gradient-form">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-xl-10">
+          <div class="card rounded-3 text-black">
+            <div class="row g-0">
+              <div class="col-lg-6">
+                <div class="card-body p-md-5 mx-md-4">
+                  <!-- Form to register -->
+                  <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h3>Please create your account</h3>
+
+                    <!-- Style the fields in the form using widget tweaks to add bootstrap classes to the inputs -->
+                    {% for field in form %}
+                      <div class="form-outline mb-4">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                          {% if field.field.widget.input_type == 'select' %}
+                              {% render_field field|add_class:"form-select" %}
+                          {% else %}
+                              {% render_field field|add_class:"form-control" %}
+                          {% endif %}
+                          {% if field.help_text %}
+                              <small class="form-text text-muted">{{ field.help_text }}</small>
+                          {% endif %}
+                          {% for error in field.errors %}
+                              <div class="invalid-feedback" style="display: block;">{{ error }}</div>
+                          {% endfor %}
+                      </div>
+                    {% endfor %}
+
+                    <div class="text-center pt-1 mb-5 pb-1">
+                      <button class="btn btn-primary" type="submit">Register</button>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center pb-4">
+                      <p class="mb-0 me-2">Already have an account?</p>
+                      <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                  <h4 class="mb-4">Welcome to our eLearning Platform</h4>
+                  <p class="small mb-0">Explore a world of knowledge, where learning knows no bounds. Join us in the
+                    journey of discovery, where you can expand your horizons, gain new skills, and unlock your
+                    potential.
+                    Dive into a realm of endless possibilities and embark on a path of lifelong learning.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
+
+<style>
+  .gradient-custom-2 {
+    background: #004175;
+    background: -webkit-linear-gradient(to right, #004175, #0073a9, #00a6ca);
+    background: linear-gradient(to right, #004175, #0073a9, #00a6ca);
+  }
+</style>
