@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure--==7z55ogjupmg!j^otgfj508qrvx1-rt6!6$y_f!kmjaiii23
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'jellyfish-app-5uolt.ondigitalocean.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'jellyfish-app-5uolt.ondigitalocean.app', 'elearningplatformuol.com']
 
 
 # Application definition
