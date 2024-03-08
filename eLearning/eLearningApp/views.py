@@ -288,3 +288,14 @@ def delete_status(request, status_id):
         status.delete()
     
     return redirect('home', username=request.user.username)
+
+# Delete Feedback Function
+@login_required
+def delete_feedback(request, feedback_id):
+    feedback = get_object_or_404(Feedback, pk=feedback_id)
+    course_id = feedback.course.id 
+
+    if request.user == feedback.student or request.user.has_perm('eLearningApp.can_create_course'):
+        feedback.delete()
+
+    return redirect('course_detail', course_id=course_id)
