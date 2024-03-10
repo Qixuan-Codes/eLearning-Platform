@@ -117,6 +117,10 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Secure Proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -148,22 +152,18 @@ LOGIN_URL = '/'
 
 API_BASE_URL ='/api'
 
-# Channel Layer for LocalHost
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             'hosts': [('127.0.0.1', 6379)],
-#         }
-#     },
-# }
 
-# Channel Layer for Hosting
+## Checking if the app is hosted or not
+IS_HOSTED_ENV = os.environ.get('IS_HOSTED_ENV', 'False') == 'True'
+
+# Set Redis host based on the environment
+REDIS_HOST = '128.199.94.95' if IS_HOSTED_ENV else '127.0.0.1'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('128.199.94.95', 6379)],
+            'hosts': [(REDIS_HOST, 6379)],
         }
     },
 }
