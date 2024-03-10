@@ -148,12 +148,22 @@ LOGIN_URL = '/'
 
 API_BASE_URL ='/api'
 
-# Channel Layer
+# Channel Layer for LocalHost
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             'hosts': [('127.0.0.1', 6379)],
+#         }
+#     },
+# }
+
+# Channel Layer for Hosting
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            'hosts': [('128.199.94.95', 6379)],
         }
     },
 }
