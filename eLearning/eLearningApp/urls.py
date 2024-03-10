@@ -3,6 +3,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
+from django.conf.urls import handler404
 
 # Initialize the default router
 router = DefaultRouter()
@@ -14,6 +15,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('logout/', views.user_logout, name='logout'),
     path('courses/', views.courses, name='courses'),
+    path('home', views.home_redirect, name='home_redirect'),
     path('home/<str:username>/', views.home, name='home'),
     path('delete_status/<int:status_id>/', views.delete_status, name='delete_status'),
     path('courses/<int:course_id>/', views.course_detail, name='course_detail'),

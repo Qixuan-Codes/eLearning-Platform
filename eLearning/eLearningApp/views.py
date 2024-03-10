@@ -88,6 +88,12 @@ def courses(request):
     return render(request, 'courses.html', context)
 
 
+# Allowing users to enter their home page by just typing /home
+@login_required
+def home_redirect(request):
+    username = request.user.username
+    return redirect('home', username=username)
+
 # Home page for users that is logged in
 # The users will be able to view other users home page based on their username
 @login_required
