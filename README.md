@@ -8,9 +8,7 @@ The eLearning platform is a web-based application designed to facilitate online 
 - [Setup Guide](#setup-guide)
 - [Installation](#installation)
 - [Running the Application](#running-the-application)
-- [Deployment](#deployment)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 - User authentication and authorization (students, teachers)
